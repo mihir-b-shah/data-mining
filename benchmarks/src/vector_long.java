@@ -38,8 +38,8 @@ public class vector_long<T> {
 
     public int find_hash(T o) {
         int hcode = o.hashCode();
-        for (int i = 0; i < array.length; ++i) {
-            if ((array[i] >>> 32) == hcode) {
+        for (int i = 0; i < pos; ++i) {
+            if ((int) (array[i] >> 32) == hcode) {
                 return (int) (array[i] & FIRST_MASK);
             }
         }
@@ -48,9 +48,19 @@ public class vector_long<T> {
 
     public void set_hash(T o, int v) {
         int hcode = o.hashCode();
-        for (int i = 0; i < array.length; ++i) {
-            if ((array[i] >>> 32) == hcode) {
+        for (int i = 0; i < pos; ++i) {
+            if ((int) (array[i] >> 32) == hcode) {
                 array[i] += (v & MASK_OUTER) + (SHIFT_OUTER);
+                break;
+            }
+        }
+    }
+    
+    public void set_hash_reg(T o, int v) {
+        int hcode = o.hashCode();
+        for (int i = 0; i < pos; ++i) {
+            if ((int) (array[i] >> 32) == hcode) {
+                array[i] += v & FIRST_MASK;
                 break;
             }
         }

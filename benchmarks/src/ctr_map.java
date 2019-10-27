@@ -15,11 +15,23 @@ public class ctr_map<T> {
         }
     }
     
+    public void incr_str_reg(T k) {
+        vector_long vl = map[adjust_index(k.hashCode())];
+        if(vl != null) {
+            vl.set_hash_reg(k, 1);
+        }
+    }
+    
+    public void put_ctr(T k) {
+        put(k, 1);
+    }
+    
     public void put(T k, int v) {
         int hcode = k.hashCode();
-        vector_long<T> ref = map[adjust_index(hcode)];
+        int ahcode = adjust_index(hcode);
+        vector_long<T> ref = map[ahcode];
         if(ref == null) {
-            map[adjust_index(hcode)] = ref = new vector_long();
+            map[ahcode] = ref = new vector_long();
         }
         ref.add(((long) hcode << 32)+v);
         ++size;
@@ -54,5 +66,9 @@ public class ctr_map<T> {
         } else {
             return val;
         }
+    }
+    
+    public int get_size() {
+        return size;
     }
 }
