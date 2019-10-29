@@ -18,51 +18,34 @@ public class ctrmap_test {
         }
         
         ctr_map<String> cm = new ctr_map(50_000);
-        HashMap<String, Integer> hmap = new HashMap<>(50_000);
+        HashMap<String, int_wrapper> hmap = new HashMap<>(50_000);
 
         for(String s: strings) {
-            int num = r.nextInt()&0x7fff_ffff;
-            cm.put(s, num);
-            hmap.put(s, num);
-            
-            if(cm.get(s) != hmap.get(s)) {
-                int c = cm.get(s);
-                int h = hmap.get(s);
-            }
+            int num = r.nextInt(5);
+            cm.put_format(s, num);
+            hmap.put(s, new int_wrapper(num));
         }
         Runtime rt = Runtime.getRuntime();
         
-        int[] index = new int[10_000_000];
+        int[] index = new int[1_000];
         for(int i = 0; i<index.length; ++i) {
             index[i] = r.nextInt(strings.length);
         }
-        
-        System.gc();
-        long T = System.nanoTime();
-        long M = rt.freeMemory();
-        
+
         for(int i = 0; i<index.length; ++i) {
-            cm.incr_str_reg(strings[index[i]]);
+            int num = r.nextInt(5);
+            cm.incr_str(strings[index[i]], num);
+            hmap.get(strings[index[i]]).incr(num);
         }
-        System.out.println("ctrmap 10m incr: " + (System.nanoTime()-T));
-        System.out.println("ctrmap mem usage: " + (M-rt.freeMemory()));
-        System.gc();
-        
-        M = rt.freeMemory();
-        T = System.nanoTime();
-        for(int i = 0; i<index.length; ++i) {
-            hmap.put(strings[index[i]], hmap.get(strings[index[i]])+1);
-        }
-        
-        System.out.println("hashmap 10m incr: " + (System.nanoTime()-T));
-        System.out.println("hashmap mem usage: " + (M-rt.freeMemory()));
         
         int error = 0;
         
         for(int i = 0; i<strings.length; ++i) {
-            if(hmap.get(strings[i]) != cm.get(strings[i])) {
-                //System.out.println(hmap.get(strings[i]));
-                //System.out.println(cm.get(strings[i])+"\n");
+            int res = cm.get(strings[i]);
+            if(hmap.get(strings[i]).avg() != (float) (res&0x1_ffff)/(res>>17)) {
+                System.out.printf("hashmap: %f%n", hmap.get(strings[i]).avg());
+                System.out.printf("ctrmap: %f%n", (float) 
+                        (res&0x1_ffff)/(res>>17));
                 ++error;
             }
         }

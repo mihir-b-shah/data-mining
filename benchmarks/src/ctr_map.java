@@ -3,6 +3,7 @@ public class ctr_map<T> {
     
     private vector_long<T>[] map;
     private int size;
+    private static final int incr = 1 << 17;
     
     public ctr_map(int N) {
         map = new vector_long[Math.min(N<<1,100_000)];
@@ -20,6 +21,10 @@ public class ctr_map<T> {
         if(vl != null) {
             vl.set_hash_reg(k, 1);
         }
+    }
+    
+    public void put_format(T k, int v) {
+        put(k, incr+(v&0x1_ffff));
     }
     
     public void put_ctr(T k) {
@@ -57,6 +62,11 @@ public class ctr_map<T> {
         } else {
             return -1;
         }
+    }
+    
+    public float flt_avg(T o) {
+        int res = get(o);
+        return (float) (res&0x1_ffff)/(res>>17);
     }
     
     public int adjust_index(int e) {

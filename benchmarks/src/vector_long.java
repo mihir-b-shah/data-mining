@@ -4,8 +4,8 @@ public class vector_long<T> {
     private long[] array;
     private int pos;
     private static final long FIRST_MASK = 0x7fff_ffff;
-    private static final int MASK_OUTER = 0x1_ffff;
-    private static final int SHIFT_OUTER = 1 << 17;
+    private static final long MASK_OUTER = 0x1_ffff;
+    private static final long SHIFT_OUTER = 1 << 17;
 
     public vector_long() {
         array = new long[2];
@@ -50,7 +50,9 @@ public class vector_long<T> {
         int hcode = o.hashCode();
         for (int i = 0; i < pos; ++i) {
             if ((int) (array[i] >> 32) == hcode) {
+                String s = Long.toHexString(array[i]);
                 array[i] += (v & MASK_OUTER) + (SHIFT_OUTER);
+                String t = Long.toHexString(array[i]);
                 break;
             }
         }
