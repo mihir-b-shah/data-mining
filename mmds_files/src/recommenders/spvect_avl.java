@@ -365,4 +365,19 @@ public class spvect_avl implements Comparable<spvect_avl> {
             }
         }
     }
+    
+    public static void main(String[] args) {
+        spvect_avl tree = new spvect_avl(1,0.1f);
+        tree.add(4, 1f);
+        tree.add(7, 1f);
+        tree.add(8, 1f);
+        tree.add(11, 1f);
+        tree.add(44, 1f);
+        tree.add(6, 1f);
+        tree.add(13, 1f);
+        tree.add(15, 1f);
+        tree.add(14, 1f);
+        tree.add(2, 1f);
+        System.out.println(tree.print_tree(80));
+    }
 }
